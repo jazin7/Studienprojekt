@@ -2,6 +2,7 @@ import os
 import nbformat
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import csv
 
 percentage_value = 0.98 # Schwellenwert für die Ähnlichkeit (ändern, falls nötig zwischen 0 und 1. z.B. 0.95 entspricht 95%)
 base_path = os.path.dirname(os.path.realpath(__file__)) # prüft alles im Pfad in dem sich das Python script befindet
@@ -35,9 +36,8 @@ def find_plagiat(base_path):
             similar = cosine_sim[i, j] # Variable für die Ähnlichkeit
             # Checken ob die Ähnlichkeit über dem Schwellenwert liegt
             if similar > percentage_value:
-                # Schlüssel für das result dictionary
-                #key = (os.path.relpath(files[i], base_path), os.path.relpath(files[j], base_path))
-                key = ('_'.join(os.path.basename(os.path.dirname(os.path.relpath(files[i], base_path))).split('_')[:1]), '_'.join(os.path.basename(os.path.dirname(os.path.relpath(files[j], base_path))).split('_')[:1])) # Entfernt alles nach dem zweiten Unterstrich für die Übersichtlichkeit?
+                # Schlüssel für das result dictionary + entfernt alles nach dem zweiten Unterstrich
+                key = ('_'.join(os.path.basename(os.path.dirname(os.path.relpath(files[i], base_path))).split('_')[:1]), '_'.join(os.path.basename(os.path.dirname(os.path.relpath(files[j], base_path))).split('_')[:1]))
                 results[key] = "Potenzielles Plagiat mit Ähnlichkeit: " + str(round(similar * 100, 2)) + "%"
     if results:
         return results
@@ -58,34 +58,17 @@ else:
         print(f"{pair[0]} und {pair[1]}: {status}")
         last_person = pair[0]
 
-
-
-with open(os.path.join(base_path, "plagiatsliste.txt"), "w") as file:
-    if isinstance(plagiat_results, str):
-        file.write(plagiat_results)
-    else:
-        last_person = None
-        for pair, status in plagiat_results.items():
-            if pair[0] != last_person:
-                file.write("\n")
-            file.write(f"{pair[0]} und {pair[1]}: {status}\n")
-            last_person = pair[0]
-
-
-import csv
-
-# Verwende den base_path und erstelle eine CSV-Datei darin
+# CSV Datei in basepath erstellen
 with open(os.path.join(base_path, "plagiatsliste.csv"), "w", newline='') as file:
     writer = csv.writer(file, delimiter=';')
-    # Schreibe die Kopfzeile der CSV-Datei
+    # Oberste Row mit 3 Columns getrennt
     writer.writerow(["Student 1", "Student 2", "Ähnlichkeit"])
 
     if isinstance(plagiat_results, str):
-        # Wenn keine Plagiate gefunden wurden, schreibe eine entsprechende Nachricht in die erste Spalte
+        # Falls keine Plagiate gefunden wurden
         writer.writerow([plagiat_results, "", ""])
     else:
         for pair, status in plagiat_results.items():
-            # Extrahiere den Ähnlichkeitswert aus dem Status-String
-            similarity = status.split(":")[-1].strip()
-            # Schreibe die Daten der beteiligten Studenten und deren Ähnlichkeitswert in die CSV-Datei
+            similarity = status.split(":")[-1].strip() # Ähnlichkeitswert
+            # schreibt die Studentenpaare samt Ähnlichkeitswert in die jeweiligen rows
             writer.writerow([pair[0], pair[1], similarity])
