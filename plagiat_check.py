@@ -48,15 +48,15 @@ def find_plagiat(base_path):
 last_person = None  # Variable für die leere Zeile sobald eine neue Person gelistet wird
 plagiat_results = find_plagiat(base_path)
 
-# Unterscheidung ob Dict returned wird oder der String, falls keine Plagiate gefunden worden sind
-if isinstance(plagiat_results, str):
-    print(plagiat_results)
-else:
-    for pair, status in plagiat_results.items():
-        if pair[0] != last_person:
-            print("")
-        print(f"{pair[0]} und {pair[1]}: {status}")
-        last_person = pair[0]
+# # Unterscheidung ob Dict returned wird oder der String, falls keine Plagiate gefunden worden sind
+# if isinstance(plagiat_results, str):
+#     print(plagiat_results)
+# else:
+#     for pair, status in plagiat_results.items():
+#         if pair[0] != last_person:
+#             print("")
+#         print(f"{pair[0]} und {pair[1]}: {status}")
+#         last_person = pair[0]
 
 # CSV Datei in basepath erstellen
 with open(os.path.join(base_path, "plagiatsliste.csv"), "w", newline='') as file:
