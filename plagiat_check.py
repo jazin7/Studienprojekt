@@ -4,7 +4,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import csv
 
-percentage_value = 0.98 # Schwellenwert für die Ähnlichkeit (ändern, falls nötig zwischen 0 und 1. z.B. 0.95 entspricht 95%)
+percentage_value = 0.96 # Schwellenwert für die Ähnlichkeit (ändern, falls nötig zwischen 0 und 1. z.B. 0.95 entspricht 95%)
 base_path = os.path.dirname(os.path.realpath(__file__)) # prüft alles im Pfad in dem sich das Python script befindet
 
 def read_notebook_code(path):
@@ -19,8 +19,13 @@ def read_notebook_code(path):
 def find_plagiat(base_path):
     # Erstelle eine Liste der Pfade zu allen .ipynb-Dateien im Verzeichnis
     files = [os.path.join(dp, f) for dp, dn, filenames in os.walk(base_path) for f in filenames if f.endswith(".ipynb")]
+
+
+
     # Anzahl ALLER gefundenen Notebooks zur Überprüfung
-    print("Anzahl der .ipynb Dokumente: " + str(len(files)) + "\n ")
+    #print("Anzahl der .ipynb Dokumente: " + str(len(files)) + "\n ")
+
+
 
     # Iteriere über die Notebooks und liest den Code aus
     documents = [read_notebook_code(file) for file in files]
@@ -61,13 +66,12 @@ plagiat_results = find_plagiat(base_path)
 # CSV Datei in basepath erstellen
 with open(os.path.join(base_path, "plagiatsliste.csv"), "w", newline='') as file:
     writer = csv.writer(file, delimiter=';')
-    # Oberste Row mit 3 Columns getrennt
-    writer.writerow(["Student 1", "Student 2", "Ähnlichkeit"])
-
     if isinstance(plagiat_results, str):
         # Falls keine Plagiate gefunden wurden
         writer.writerow([plagiat_results, "", ""])
     else:
+        # Oberste Row mit 3 Columns getrennt
+        writer.writerow(["Student 1", "Student 2", "Ähnlichkeit"])
         for pair, status in plagiat_results.items():
             similarity = status.split(":")[-1].strip() # Ähnlichkeitswert
             # schreibt die Studentenpaare samt Ähnlichkeitswert in die jeweiligen rows
