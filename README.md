@@ -1,4 +1,4 @@
-```
+
 Kurs/
 ├── submitted
 │   ├── Student A
@@ -21,4 +21,4 @@ Kurs/
 │   └── Student F
 │       └── Abgabe
 │           └── Notebook.ipynb
-```
+
