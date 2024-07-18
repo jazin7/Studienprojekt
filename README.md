@@ -3,10 +3,12 @@ Kurs/
 ├── submitted
 │   ├── Student A
 │   │   └── Abgabe
-│   │       └── Notebook.ipynb
+│   │       └── Notebook1.ipynb
+│   │       └── Notebook2.ipynb
 │   ├── Student B
 │   │   └── Abgabe
-│   │       └── Notebook.ipynb
+│   │       └── Notebook1.ipynb
+│   │       └── Notebook2.ipynb
 │   ├── Student C
 │   │   └── Abgabe
 │   │       └── Notebook.ipynb
